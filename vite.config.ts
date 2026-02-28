@@ -6,12 +6,19 @@ import dts from 'vite-plugin-dts';
 export default defineConfig({
     build: {
         lib: {
-            entry: 'src/index.ts',
+            entry: {
+                index: 'src/index.ts',
+                server: 'src/server.ts',
+                client: 'src/client.ts'
+            },
             formats: ['es', 'cjs'],
-            fileName: (format) => `index.${format}.js`
+            fileName: (format, entryName) => `${entryName}.${format}.js`
         },
         rollupOptions: {
-            external: ["zlib", "fs"],
+            external: [/^node:/, "crypto", "@sourceregistry/node-jwt"],
+            output: {
+                exports: "named"
+            }
         },
         sourcemap: true,
         target: 'node22'
