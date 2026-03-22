@@ -14,30 +14,17 @@ import {
 } from "./authenticator-data";
 import {validateAttestationObject, verifyAttestationStatement} from "./attestation";
 import type {
-    AttestationMetadataEntry,
-    AttestationMetadataProvider,
-    AttestationPolicyInput,
-    AuthenticationOptionsJSON,
     AuthenticationResponseInput,
     AuthenticationTokenClaims,
     AuthenticationTokenPayload,
     AuthenticationVerificationResult,
     CreateAuthenticationOptionsInput,
     CreateRegistrationOptionsInput,
-    CredentialDescriptorJSON,
-    ExtensionPolicyInput,
-    ParsedAssertionAuthenticatorData,
-    ParsedAuthenticatorFlags,
     ParsedRegistration,
-    ParsedRegistrationAuthenticatorData,
-    RegistrationOptionsJSON,
     RegistrationResponseInput,
     RegistrationTokenClaims,
     RegistrationTokenPayload,
-    RegistrationUser,
     Realm,
-    UsableKeyPair,
-    VerifiedAttestation,
     WebAuthConfig
 } from "./types";
 
@@ -200,6 +187,25 @@ export const verifyAuthenticationResponse = (
         fail("ERR_INVALID_INPUT", "expected_challenge must be a non-empty string");
     }
 
+    if (input.credential_id !== undefined && (typeof input.credential_id !== "string" || input.credential_id.length === 0)) {
+        fail("ERR_INVALID_INPUT", "credential_id must be a non-empty string when provided");
+    }
+
+    if (
+        input.expected_credential_id !== undefined &&
+        (typeof input.expected_credential_id !== "string" || input.expected_credential_id.length === 0)
+    ) {
+        fail("ERR_INVALID_INPUT", "expected_credential_id must be a non-empty string when provided");
+    }
+
+    if (
+        input.credential_id !== undefined &&
+        input.expected_credential_id !== undefined &&
+        input.credential_id !== input.expected_credential_id
+    ) {
+        fail("ERR_CREDENTIAL_MISMATCH", "Credential ID mismatch");
+    }
+
     const clientDataBuffer = validateCollectedClientData({
         expectedType: "webauthn.get",
         expectedChallenge,
@@ -240,6 +246,7 @@ export const verifyAuthenticationResponse = (
     }
 
     return {
+        credential_id: input.credential_id,
         counter: parsed.signCount,
         user_present: parsed.flags.userPresent,
         user_verified: parsed.flags.userVerified,

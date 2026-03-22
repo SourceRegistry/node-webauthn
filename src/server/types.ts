@@ -207,12 +207,14 @@ export type AuthenticationResponseInput = {
     readonly require_user_presence?: boolean;
     readonly require_user_verification?: boolean;
     readonly credential_id?: string;
+    readonly expected_credential_id?: string;
     readonly client_extension_results?: AuthenticationExtensionsClientOutputs;
     readonly allowed_client_extensions?: readonly ("appid" | "largeBlob")[];
     readonly app_id?: string;
 };
 
 export type AuthenticationVerificationResult = {
+    readonly credential_id?: string;
     readonly counter: number;
     readonly user_present: boolean;
     readonly user_verified: boolean;

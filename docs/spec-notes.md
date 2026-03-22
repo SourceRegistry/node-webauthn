@@ -20,6 +20,7 @@ This keeps the security-sensitive behavior on the server while preserving a simp
   - ceremony `type`
   - `challenge`
   - `origin`
+  - stable malformed-JSON rejection
 - RP ID hash verification in authenticator data
 - Authenticator flag parsing for:
   - UP
@@ -29,6 +30,7 @@ This keeps the security-sensitive behavior on the server while preserving a simp
   - AT
   - ED
 - Signature verification for authentication assertions
+- Optional authentication credential ID binding
 - Signature counter replay detection
 - JSON-safe option builders for registration and authentication
 - Registration attestation verification for:
@@ -47,6 +49,7 @@ This keeps the security-sensitive behavior on the server while preserving a simp
   - `permissive`
   - `strict`
 - Optional metadata provider hooks for relying-party trust policy
+- CA and `keyCertSign` checks when a certificate issues another certificate in the attestation path
 - Lightweight extension policy enforcement for:
   - `credProps`
   - `appid`

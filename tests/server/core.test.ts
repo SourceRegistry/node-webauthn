@@ -138,6 +138,8 @@ describe("server core flow", () => {
     it("verifies an authentication response", () => {
         const result = webauth.verifyAuthenticationResponse({
             expected_challenge: challenge,
+            credential_id: toBase64Url(credentialId),
+            expected_credential_id: toBase64Url(credentialId),
             client_data_json: authenticationClientData,
             authenticator_data: toBase64Url(authenticationAuthenticatorData),
             signature: authenticationSignature,
@@ -149,6 +151,7 @@ describe("server core flow", () => {
         });
 
         expect(result).toEqual({
+            credential_id: toBase64Url(credentialId),
             counter: 8,
             user_present: true,
             user_verified: true,
@@ -172,6 +175,20 @@ describe("server core flow", () => {
         });
 
         expect(result.counter).toBe(8);
+    });
+
+    it("rejects authentication credential id mismatches", () => {
+        expect(() => webauth.verifyAuthenticationResponse({
+            expected_challenge: challenge,
+            credential_id: "wrong-credential-id",
+            expected_credential_id: toBase64Url(credentialId),
+            client_data_json: authenticationClientData,
+            authenticator_data: toBase64Url(authenticationAuthenticatorData),
+            signature: authenticationSignature,
+            origin,
+            rp_id: rpId,
+            public_key: toBase64Url(credentialCoseKey)
+        })).toThrowError(WebAuthError);
     });
 
     it("rejects replayed authentication counters", () => {
@@ -237,6 +254,18 @@ describe("server core flow", () => {
             authenticator_data: toBase64Url(authenticationAuthenticatorData),
             signature: authenticationSignature,
             origin: "https://invalid.example.com",
+            rp_id: rpId,
+            public_key: toBase64Url(credentialCoseKey)
+        })).toThrowError(WebAuthError);
+    });
+
+    it("rejects malformed clientDataJSON with a stable library error", () => {
+        expect(() => webauth.verifyAuthenticationResponse({
+            expected_challenge: challenge,
+            client_data_json: toBase64Url("{"),
+            authenticator_data: toBase64Url(authenticationAuthenticatorData),
+            signature: authenticationSignature,
+            origin,
             rp_id: rpId,
             public_key: toBase64Url(credentialCoseKey)
         })).toThrowError(WebAuthError);

@@ -16,9 +16,26 @@ const validateOrigin = (origin: string, allowedOrigins: readonly string[]) => {
  */
 export const decodeClientData = (clientDataJson: string): { buffer: Buffer; data: CollectedClientData } => {
     const buffer = fromBase64Url(assertString(clientDataJson, "client_data_json"));
+    let data: CollectedClientData | undefined;
+
+    try {
+        data = JSON.parse(textDecoder.decode(buffer)) as CollectedClientData;
+    } catch {
+        fail("ERR_INVALID_CLIENT_DATA", "clientDataJSON must be valid JSON");
+    }
+
+    if (!data || typeof data !== "object" || Array.isArray(data)) {
+        fail("ERR_INVALID_CLIENT_DATA", "clientDataJSON must decode to an object");
+    }
+
+    const parsedData = data;
+    if (parsedData === undefined) {
+        fail("ERR_INVALID_CLIENT_DATA", "clientDataJSON could not be decoded");
+    }
+
     return {
         buffer,
-        data: JSON.parse(textDecoder.decode(buffer)) as CollectedClientData
+        data: parsedData as CollectedClientData
     };
 };
 

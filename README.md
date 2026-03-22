@@ -86,12 +86,12 @@ const parsed = server.verifyRegistrationResponse({
 | Area | Status | Notes |
 | --- | --- | --- |
 | Server-generated registration/authentication options | Strong | `createRegistrationOptions(...)` and `createAuthenticationOptions(...)` are the intended entrypoints. |
-| `clientDataJSON` validation | Strong | Checks ceremony type, challenge, origin allowlist, and rejects unsupported cross-origin ceremonies. |
+| `clientDataJSON` validation | Strong | Checks ceremony type, challenge, origin allowlist, rejects unsupported cross-origin ceremonies, and normalizes malformed JSON into stable library errors. |
 | Authenticator data parsing | Strong | Parses RP ID hash, flags, counters, attested credential data, and extension data. |
-| Authentication assertion verification | Strong | Verifies signature, RP/appid hash, UP/UV policy, counter progression, and allowed client extensions. |
+| Authentication assertion verification | Strong | Verifies signature, RP/appid hash, optional credential binding, UP/UV policy, counter progression, and allowed client extensions. |
 | Registration verification core | Strong | Verifies RP ID hash, credential binding, requested algorithm policy, and attestation dispatch. |
 | Attestation format coverage | Broad | Supports `none`, `packed`, `fido-u2f`, `apple`, `android-key`, `android-safetynet`, and `tpm`. |
-| Attestation trust policy | Good | Supports `none`, `permissive`, and `strict` trust modes plus trust anchors and metadata hooks. |
+| Attestation trust policy | Good | Supports `none`, `permissive`, and `strict` trust modes plus trust anchors, metadata hooks, CA/key-usage checks for issuing certs, and exact leaf pinning. |
 | Extension support | Partial | Practical subset today: `credProps`, `appid`, `appidExclude`, and `largeBlob`. |
 | Metadata / revocation | Partial | Metadata hooks exist, but there is no built-in FIDO MDS integration or revocation pipeline yet. |
 | Cross-origin / advanced browser edge cases | Limited | Cross-origin ceremonies are intentionally rejected for now. |
@@ -183,10 +183,28 @@ Validates:
 - challenge
 - origin
 - RP ID hash
+- optional credential ID binding when `credential_id` and `expected_credential_id` are supplied
 - signature
 - counter progression
 - user presence / verification policy
 - authentication extension allowlist
+
+Typical usage:
+
+```ts
+const result = server.verifyAuthenticationResponse({
+    expected_challenge: publicKey.challenge,
+    credential_id: credential.id,
+    expected_credential_id: storedCredential.credential_id,
+    client_data_json: credential.client_data_json,
+    authenticator_data: credential.authenticator_data,
+    signature: credential.signature,
+    origin: "https://example.com",
+    rp_id: "example.com",
+    public_key: storedCredential.public_key,
+    previous_counter: storedCredential.counter
+});
+```
 
 ## Client API
 
