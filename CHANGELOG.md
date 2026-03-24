@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/SourceRegistry/node-webauthn/compare/v1.1.0...v1.1.1) (2026-03-24)
+
+
+### Bug Fixes
+
+* added NotAllowedError helper class for proper typing ([225e960](https://github.com/SourceRegistry/node-webauthn/commit/225e96094cc66c115ea39fc0afb17860c2d29f90))
+
 # [1.1.0](https://github.com/SourceRegistry/node-webauthn/compare/v1.0.0...v1.1.0) (2026-03-22)
 
 
