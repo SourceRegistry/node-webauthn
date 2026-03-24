@@ -1,3 +1,10 @@
+## [1.1.3](https://github.com/SourceRegistry/node-webauthn/compare/v1.1.2...v1.1.3) (2026-03-24)
+
+
+### Bug Fixes
+
+* made assertion method static ([2dfb91c](https://github.com/SourceRegistry/node-webauthn/commit/2dfb91c01d00cb3d091b88e046456b4c906a1413))
+
 ## [1.1.2](https://github.com/SourceRegistry/node-webauthn/compare/v1.1.1...v1.1.2) (2026-03-24)
 
 
