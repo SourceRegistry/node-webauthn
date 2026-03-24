@@ -1,3 +1,11 @@
+## [1.1.2](https://github.com/SourceRegistry/node-webauthn/compare/v1.1.1...v1.1.2) (2026-03-24)
+
+
+### Bug Fixes
+
+* added docs build script and package updates ([a3d99fd](https://github.com/SourceRegistry/node-webauthn/commit/a3d99fda0f528dadeeed4466cea2db799c35aae9))
+* ts6.0 to ts7.0 migration errors ([149df17](https://github.com/SourceRegistry/node-webauthn/commit/149df171e62146cf36f6b5190011fb994c7242fe))
+
 ## [1.1.1](https://github.com/SourceRegistry/node-webauthn/compare/v1.1.0...v1.1.1) (2026-03-24)
 
 
