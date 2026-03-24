@@ -23,7 +23,7 @@ export class NotAllowedError extends DOMException {
         super(message, "NotAllowedError");
     }
 
-    isInstanceOf(e: unknown): e is NotAllowedError {
+    static isInstanceOf(e: unknown): e is NotAllowedError {
         return e instanceof DOMException && e.code === 0 && e.name === "NotAllowedError"
     }
 
