@@ -13,6 +13,22 @@ export class WebAuthClientError extends Error {
     }
 }
 
+/**
+ * Helper class to see if the error is a not allowed error.
+ */
+export class NotAllowedError extends DOMException {
+
+
+    constructor(message: string) {
+        super(message, "NotAllowedError");
+    }
+
+    isInstanceOf(e: unknown): e is NotAllowedError {
+        return e instanceof DOMException && e.code === 0 && e.name === "NotAllowedError"
+    }
+
+}
+
 export type Base64UrlJSON = string | number | boolean | null | Base64UrlJSON[] | {
     [key: string]: Base64UrlJSON;
 };
