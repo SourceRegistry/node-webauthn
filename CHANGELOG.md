@@ -1,3 +1,10 @@
+## [1.1.4](https://github.com/SourceRegistry/node-webauthn/compare/v1.1.3...v1.1.4) (2026-03-30)
+
+
+### Bug Fixes
+
+* add jsr publishing and consolidate release workflow ([c03e5bc](https://github.com/SourceRegistry/node-webauthn/commit/c03e5bc53b7b593039d2634f5c10f9880c59fec8))
+
 ## [1.1.3](https://github.com/SourceRegistry/node-webauthn/compare/v1.1.2...v1.1.3) (2026-03-24)
 
 
