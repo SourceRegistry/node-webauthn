@@ -25,6 +25,7 @@ import type {
     RegistrationTokenClaims,
     RegistrationTokenPayload,
     Realm,
+    WebAuth,
     WebAuthConfig
 } from "./types";
 
@@ -53,6 +54,7 @@ export type {
     Realm,
     UsableKeyPair,
     VerifiedAttestation,
+    WebAuth,
     WebAuthConfig
 } from "./types";
 
@@ -260,7 +262,7 @@ export const verifyAuthenticationResponse = (
 /**
  * Creates the default server helper surface used by the `server` entrypoint.
  */
-export const createWebAuth = (config: WebAuthConfig) => ({
+export const createWebAuth = (config: WebAuthConfig): WebAuth => ({
     toBase64Url,
     fromBase64Url,
     challenge(bytes?: number) {

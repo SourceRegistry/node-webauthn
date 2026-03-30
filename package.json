@@ -33,7 +33,8 @@
     "test": "vitest run",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest run --coverage",
-    "docs:build": "typedoc src/index.ts --out docs --name \"node-webauthn\" --theme default --excludePrivate --excludeProtected"
+    "docs:build": "typedoc src/index.ts --out docs --name \"node-webauthn\" --theme default --excludePrivate --excludeProtected",
+    "version:sync:jsr": "node ./scripts/sync-jsr-version.mjs"
   },
   "repository": {
     "type": "git",
@@ -63,6 +64,7 @@
   "devDependencies": {
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/commit-analyzer": "^13.0.1",
+    "@semantic-release/exec": "^7.1.0",
     "@semantic-release/git": "^10.0.1",
     "@semantic-release/npm": "^13.1.4",
     "@semantic-release/release-notes-generator": "^14.0.3",
@@ -97,10 +99,17 @@
         "@semantic-release/npm"
       ],
       [
+        "@semantic-release/exec",
+        {
+          "prepareCmd": "npm run version:sync:jsr"
+        }
+      ],
+      [
         "@semantic-release/git",
         {
           "assets": [
             "package.json",
+            "jsr.json",
             "CHANGELOG.md"
           ],
           "message": "node-webauthn(release): 🚀 ${nextRelease.version} \n\n${nextRelease.notes}"

@@ -8,6 +8,10 @@ TypeScript helpers for WebAuthn registration and authentication with dedicated `
 npm install @sourceregistry/node-webauthn
 ```
 
+```bash
+npx jsr add @sourceregistry/node-webauthn
+```
+
 ## Entry points
 
 ```ts

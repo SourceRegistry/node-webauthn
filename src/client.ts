@@ -1,4 +1,4 @@
-const textEncoder = new TextEncoder();
+const textEncoder: TextEncoder = new TextEncoder();
 
 /**
  * Stable error type emitted by browser-facing helper methods.
@@ -58,6 +58,18 @@ export type AuthenticationCredentialJSON = {
     readonly signature: string;
     readonly user_handle?: string;
     readonly client_extension_results?: AuthenticationExtensionsClientOutputs;
+};
+
+export type WebAuthClient = {
+    readonly toBase64Url: typeof toBase64Url;
+    readonly fromBase64Url: typeof fromBase64Url;
+    readonly utf8ToBase64Url: (input: string) => string;
+    readonly toCreationOptions: typeof toCreationOptions;
+    readonly toRequestOptions: typeof toRequestOptions;
+    readonly serializeRegistrationCredential: typeof serializeRegistrationCredential;
+    readonly serializeAuthenticationCredential: typeof serializeAuthenticationCredential;
+    readonly startRegistration: typeof startRegistration;
+    readonly startAuthentication: typeof startAuthentication;
 };
 
 /**
@@ -143,7 +155,7 @@ const bytesToBase64Url = (input: ArrayBuffer | ArrayBufferView): string => {
     return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
 };
 
-const utf8ToBase64Url = (input: string) => bytesToBase64Url(textEncoder.encode(input));
+const utf8ToBase64Url = (input: string): string => bytesToBase64Url(textEncoder.encode(input));
 
 /**
  * Encodes bytes into base64url without padding.
@@ -294,7 +306,7 @@ export const startAuthentication = async (
 /**
  * Creates the default browser helper surface used by the `client` entrypoint.
  */
-export const createWebAuthClient = () => ({
+export const createWebAuthClient = (): WebAuthClient => ({
     toBase64Url,
     fromBase64Url,
     utf8ToBase64Url,
@@ -308,4 +320,4 @@ export const createWebAuthClient = () => ({
 
 export default createWebAuthClient;
 
-export const WebAuthnClient = createWebAuthClient
+export const WebAuthnClient = createWebAuthClient;

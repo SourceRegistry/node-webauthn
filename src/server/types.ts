@@ -224,6 +224,28 @@ export type AuthenticationVerificationResult = {
     readonly client_extension_results?: AuthenticationExtensionsClientOutputs;
 };
 
+export type WebAuth = {
+    readonly toBase64Url: (input: Buffer | Uint8Array | string) => string;
+    readonly fromBase64Url: (input: string) => Buffer;
+    readonly challenge: (bytes?: number) => string;
+    readonly generateChallenge: (bytes?: number) => string;
+    readonly createRegistrationOptions: (input: CreateRegistrationOptionsInput) => RegistrationOptionsJSON;
+    readonly createAuthenticationOptions: (input?: CreateAuthenticationOptionsInput) => AuthenticationOptionsJSON;
+    readonly signRegistration: (
+        realmOrPayload: Realm | RegistrationTokenPayload,
+        maybePayload?: RegistrationTokenPayload
+    ) => string;
+    readonly verifyRegistration: (realmOrToken: Realm | string, maybeToken?: string) => RegistrationTokenClaims;
+    readonly signAuthentication: (
+        realmOrPayload: Realm | AuthenticationTokenPayload,
+        maybePayload?: AuthenticationTokenPayload
+    ) => string;
+    readonly verifyAuthentication: (realmOrToken: Realm | string, maybeToken?: string) => AuthenticationTokenClaims;
+    readonly parseRegistration: (input: RegistrationResponseInput) => ParsedRegistration;
+    readonly verifyRegistrationResponse: (input: RegistrationResponseInput) => ParsedRegistration;
+    readonly verifyAuthenticationResponse: (input: AuthenticationResponseInput) => AuthenticationVerificationResult;
+};
+
 export type AttestationStatementNone = Record<string, never>;
 
 export type ParsedAuthenticatorFlags = {
