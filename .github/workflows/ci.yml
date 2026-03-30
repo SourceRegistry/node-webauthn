@@ -5,8 +5,6 @@ on:
   push:
     branches:
       - "**"
-    tags:
-      - "v*"
   workflow_dispatch:
 
 concurrency:
@@ -36,8 +34,8 @@ jobs:
       - name: Build the package
         run: npm run build
 
-  publish-npm:
-    name: Publish NPM
+  create-release:
+    name: Create Release
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     needs:
       - test
@@ -46,7 +44,9 @@ jobs:
       contents: write
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} //it's generated automatically
-      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+    outputs:
+      release_created: ${{ steps.release_tag.outputs.release_created }}
+      release_tag: ${{ steps.release_tag.outputs.release_tag }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -59,27 +59,8 @@ jobs:
           registry-url: "https://registry.npmjs.org/"
       - name: Install dependencies
         run: npm ci
-      - name: Semantic Release
+      - name: Create release metadata
         run: npx semantic-release
-
-  publish-jsr:
-    name: Publish JSR
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    needs:
-      - publish-npm
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      id-token: write
-    outputs:
-      release_created: ${{ steps.release_tag.outputs.release_created }}
-      release_tag: ${{ steps.release_tag.outputs.release_tag }}
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          ref: main
-          fetch-depth: 0
       - name: Fetch latest main and tags
         run: git fetch --force origin main --tags
       - name: Detect release tag on main HEAD
@@ -95,22 +76,74 @@ jobs:
           }
           "release_created=true" >> $env:GITHUB_OUTPUT
           "release_tag=$tag" >> $env:GITHUB_OUTPUT
+
+  publish-npm:
+    name: Publish NPM
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs:
+      - create-release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout repository
+        if: needs.create-release.outputs.release_created == 'true'
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.create-release.outputs.release_tag }}
+          fetch-depth: 0
       - name: Setup Node.js
-        if: steps.release_tag.outputs.release_created == 'true'
+        if: needs.create-release.outputs.release_created == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: "https://registry.npmjs.org/"
+      - name: Install dependencies
+        if: needs.create-release.outputs.release_created == 'true'
+        run: npm ci
+      - name: Build the package
+        if: needs.create-release.outputs.release_created == 'true'
+        run: npm run build
+      - name: Publish to npm
+        if: needs.create-release.outputs.release_created == 'true'
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish --access public
+
+  publish-jsr:
+    name: Publish JSR
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs:
+      - create-release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Checkout repository
+        if: needs.create-release.outputs.release_created == 'true'
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.create-release.outputs.release_tag }}
+          fetch-depth: 0
+      - name: Setup Node.js
+        if: needs.create-release.outputs.release_created == 'true'
         uses: actions/setup-node@v4
         with:
           node-version: 22
       - name: Install dependencies
-        if: steps.release_tag.outputs.release_created == 'true'
+        if: needs.create-release.outputs.release_created == 'true'
         run: npm ci
       - name: Publish to JSR
-        if: steps.release_tag.outputs.release_created == 'true'
+        if: needs.create-release.outputs.release_created == 'true'
         run: npx jsr publish --provenance
 
   deploy-docs:
     name: Deploy Docs
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     needs:
+      - create-release
+      - publish-npm
       - publish-jsr
     runs-on: ubuntu-latest
     permissions:
@@ -121,12 +154,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          ref: main
+          ref: ${{ needs.create-release.outputs.release_created == 'true' && needs.create-release.outputs.release_tag || 'main' }}
           fetch-depth: 0
-      - name: Fetch latest main
-        run: git fetch --force origin main
-      - name: Use latest main
-        run: git checkout origin/main
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
