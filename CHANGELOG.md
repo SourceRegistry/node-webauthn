@@ -1,3 +1,10 @@
+## [1.1.7](https://github.com/SourceRegistry/node-webauthn/compare/v1.1.6...v1.1.7) (2026-03-30)
+
+
+### Bug Fixes
+
+* use current jsr publish command ([0d72034](https://github.com/SourceRegistry/node-webauthn/commit/0d7203458bce118feabee3c4cb767ff026a253e1))
+
 ## [1.1.6](https://github.com/SourceRegistry/node-webauthn/compare/v1.1.5...v1.1.6) (2026-03-30)
 
 
