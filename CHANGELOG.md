@@ -1,3 +1,10 @@
+## [1.1.10](https://github.com/SourceRegistry/node-webauthn/compare/v1.1.9...v1.1.10) (2026-03-30)
+
+
+### Bug Fixes
+
+* include package lock in release commit ([7d4f753](https://github.com/SourceRegistry/node-webauthn/commit/7d4f753c3e9e5c772e63b0afa76805c9e8b32676))
+
 ## [1.1.9](https://github.com/SourceRegistry/node-webauthn/compare/v1.1.8...v1.1.9) (2026-03-30)
 
 
