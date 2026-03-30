@@ -136,7 +136,7 @@ jobs:
         run: npm ci
       - name: Publish to JSR
         if: needs.create-release.outputs.release_created == 'true'
-        run: npx jsr publish --provenance
+        run: npx jsr publish
 
   deploy-docs:
     name: Deploy Docs
