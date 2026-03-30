@@ -1,3 +1,10 @@
+## [1.1.8](https://github.com/SourceRegistry/node-webauthn/compare/v1.1.7...v1.1.8) (2026-03-30)
+
+
+### Bug Fixes
+
+* add package badges to readme ([2aef681](https://github.com/SourceRegistry/node-webauthn/commit/2aef68144e6a81f32fe270e11bf7a08c67cb7ec0))
+
 ## [1.1.7](https://github.com/SourceRegistry/node-webauthn/compare/v1.1.6...v1.1.7) (2026-03-30)
 
 
