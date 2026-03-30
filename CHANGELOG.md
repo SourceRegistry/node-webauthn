@@ -1,3 +1,10 @@
+## [1.1.5](https://github.com/SourceRegistry/node-webauthn/compare/v1.1.4...v1.1.5) (2026-03-30)
+
+
+### Bug Fixes
+
+* run jsr publish after npm release ([806f3da](https://github.com/SourceRegistry/node-webauthn/commit/806f3da1a8224e59fd4655bd97594cc7248ae01e))
+
 ## [1.1.4](https://github.com/SourceRegistry/node-webauthn/compare/v1.1.3...v1.1.4) (2026-03-30)
 
 
