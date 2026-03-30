@@ -64,32 +64,54 @@ jobs:
 
   publish-jsr:
     name: Publish JSR
-    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     needs:
-      - test
+      - publish-npm
     runs-on: ubuntu-latest
     permissions:
       contents: read
       id-token: write
+    outputs:
+      release_created: ${{ steps.release_tag.outputs.release_created }}
+      release_tag: ${{ steps.release_tag.outputs.release_tag }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
+          ref: main
           fetch-depth: 0
+      - name: Fetch latest main and tags
+        run: git fetch --force origin main --tags
+      - name: Detect release tag on main HEAD
+        id: release_tag
+        shell: pwsh
+        run: |
+          git checkout origin/main
+          $tag = git tag --points-at HEAD | Where-Object { $_ -match '^v\d+\.\d+\.\d+$' } | Select-Object -First 1
+          if ($null -eq $tag -or [string]::IsNullOrWhiteSpace($tag)) {
+            "release_created=false" >> $env:GITHUB_OUTPUT
+            "release_tag=" >> $env:GITHUB_OUTPUT
+            exit 0
+          }
+          "release_created=true" >> $env:GITHUB_OUTPUT
+          "release_tag=$tag" >> $env:GITHUB_OUTPUT
       - name: Setup Node.js
+        if: steps.release_tag.outputs.release_created == 'true'
         uses: actions/setup-node@v4
         with:
           node-version: 22
       - name: Install dependencies
+        if: steps.release_tag.outputs.release_created == 'true'
         run: npm ci
       - name: Publish to JSR
+        if: steps.release_tag.outputs.release_created == 'true'
         run: npx jsr publish --provenance
 
   deploy-docs:
     name: Deploy Docs
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     needs:
-      - publish-npm
+      - publish-jsr
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -98,6 +120,13 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Fetch latest main
+        run: git fetch --force origin main
+      - name: Use latest main
+        run: git checkout origin/main
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
