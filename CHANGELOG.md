@@ -1,3 +1,10 @@
+## [1.1.9](https://github.com/SourceRegistry/node-webauthn/compare/v1.1.8...v1.1.9) (2026-03-30)
+
+
+### Bug Fixes
+
+* use semantic-release jsr plugin ([b1a19e5](https://github.com/SourceRegistry/node-webauthn/commit/b1a19e5c70429fbda3aaf4aef29d4424f6df6663))
+
 ## [1.1.8](https://github.com/SourceRegistry/node-webauthn/compare/v1.1.7...v1.1.8) (2026-03-30)
 
 
