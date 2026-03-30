@@ -1,5 +1,9 @@
 # @sourceregistry/node-webauthn
 
+[![npm version](https://img.shields.io/npm/v/%40sourceregistry%2Fnode-webauthn)](https://www.npmjs.com/package/@sourceregistry/node-webauthn)
+[![JSR](https://jsr.io/badges/@sourceregistry/node-webauthn)](https://jsr.io/@sourceregistry/node-webauthn)
+[![CI](https://github.com/SourceRegistry/node-webauthn/actions/workflows/ci.yml/badge.svg)](https://github.com/SourceRegistry/node-webauthn/actions/workflows/ci.yml)
+
 TypeScript helpers for WebAuthn registration and authentication with dedicated `server` and `client` entrypoints.
 
 ## Install
