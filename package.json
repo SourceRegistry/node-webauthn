@@ -1,6 +1,6 @@
 {
   "name": "@sourceregistry/node-webauthn",
-  "version": "1.1.10",
+  "version": "1.1.11",
   "description": "Production-focused TypeScript helpers for WebAuthn registration and authentication flows in Node.js.",
   "main": "./dist/index.cjs.js",
   "module": "./dist/index.es.js",

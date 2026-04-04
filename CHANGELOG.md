@@ -1,3 +1,10 @@
+## [1.1.11](https://github.com/SourceRegistry/node-webauthn/compare/v1.1.10...v1.1.11) (2026-04-04)
+
+
+### Bug Fixes
+
+* packaging issue with pipeline ([61b57a7](https://github.com/SourceRegistry/node-webauthn/commit/61b57a7ad6c94aaa5d868c01442a8472550091ab))
+
 ## [1.1.10](https://github.com/SourceRegistry/node-webauthn/compare/v1.1.9...v1.1.10) (2026-03-30)
 
 
